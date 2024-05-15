@@ -50,10 +50,12 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
       } else if (event.key === "Backspace") {
         handleDeleteLetter();
       } else {
-        if (language === "en" && /[a-zA-Z]/.test(event.key)) {
-          setTryWord((prevTryWord) => prevTryWord + event.key.toLowerCase());
-        } else if (language === "tr" && /[a-zA-Zğüşıöç]/.test(event.key)) {
-          setTryWord((prevTryWord) => prevTryWord + event.key.toLowerCase());
+        if (event.key.length === 1) {
+          if (language === "en" && /[a-zA-Z]/.test(event.key)) {
+            setTryWord((prevTryWord) => prevTryWord + event.key.toLowerCase());
+          } else if (language === "tr" && /[a-zA-Zğüşıöç]/.test(event.key)) {
+            setTryWord((prevTryWord) => prevTryWord + event.key.toLowerCase());
+          }
         }
       }
     };
