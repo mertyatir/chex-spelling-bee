@@ -73,7 +73,7 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
   // Start a countdown when the component mounts
   useEffect(() => {
     const timer = setInterval(() => {
-      //setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
     // Cleanup function
