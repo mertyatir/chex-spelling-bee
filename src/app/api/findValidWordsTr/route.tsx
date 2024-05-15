@@ -3,10 +3,27 @@ import _ from "lodash";
 interface Word {
   letters: string[];
   word: string;
-  // include other properties if they exist
 }
 
-export async function GET(request: Request) {
+// Store the game data and the date it was generated
+let gameData: any = null;
+let gameDataDate: Date | null = null;
+
+export async function GET() {
+  // Get today's date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Check if the game data was generated today
+  if (gameDataDate && gameDataDate.getTime() === today.getTime()) {
+    // If it was, return the stored game data
+    return new Response(JSON.stringify(gameData), {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // If it wasn't, generate a new game data
+
   let pangrams: string[] = [];
   let possibleWords: string[] = [];
   let letters: string[] = [];
@@ -64,16 +81,17 @@ export async function GET(request: Request) {
     maxScore += wordScore;
   }
 
-  return new Response(
-    JSON.stringify({
-      possible_words: possibleWords,
-      letters: letters,
-      center_letter: middleLetter,
-      pangrams: pangrams,
-      maxscore: maxScore,
-    }),
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  );
+  // Store the new game data and the current date
+  gameData = {
+    possible_words: possibleWords,
+    letters: letters,
+    center_letter: middleLetter,
+    pangrams: pangrams,
+    maxscore: maxScore,
+  };
+  gameDataDate = today;
+
+  return new Response(JSON.stringify(gameData), {
+    headers: { "Content-Type": "application/json" },
+  });
 }
