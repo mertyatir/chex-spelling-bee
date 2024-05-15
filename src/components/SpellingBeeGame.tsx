@@ -13,7 +13,7 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
   const [letters, setLetters] = useState<string[]>([]);
   const [discoveredWords, setDiscoveredWords] = useState<string[]>([]);
   const [totalScore, setTotalScore] = useState(0);
-  const [pangram, setPangram] = useState("");
+  const [pangrams, setPangrams] = useState([]);
   const [centerLetter, setCenterLetter] = useState("");
   const [numFound, setNumFound] = useState(0);
   const [maxscore, setMaxscore] = useState(0);
@@ -66,7 +66,7 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
       window.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [validWords]);
+  }, [validWords, discoveredWords]);
 
   // Start a countdown when the component mounts
   useEffect(() => {
@@ -103,7 +103,7 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
 
         setLetters(data.letters);
         setValidWords(data.possible_words);
-        setPangram(data.pangram);
+        setPangrams(data.pangrams);
         setMaxscore(data.maxscore);
       } catch (error) {
         console.error("Error fetching valid words:", error);
@@ -111,7 +111,7 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
     };
 
     getValidWords();
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     if (letters.length > 0) {
@@ -261,8 +261,13 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
       score = calculateWordScore(tryWord, isPangram);
       setScore(score);
       addToTotalScore(score);
+      let newNumFound = numFound + 1;
+      setNumFound(newNumFound);
       showDiscoveredWord(tryWord);
-      setNumFound((prevNumFound) => prevNumFound + 1);
+
+      if (newNumFound === validWords.length) {
+        alert("You have found all of the possible words! Thanks for playing");
+      }
 
       if (isPangram) {
         handleNotification("Pangram!", "right");
@@ -283,10 +288,6 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
     setDiscoveredWords((prevDiscoveredWords) => {
       return [...prevDiscoveredWords, input.toLowerCase()].sort();
     });
-
-    if (numFound === validWords.length) {
-      alert("You have found all of the possible words! Thanks for playing");
-    }
   };
 
   // Helper function to add to total score
@@ -310,7 +311,10 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
 
   // Helper function to check if input word is a pangram
   const checkPangram = (input: string) => {
-    return pangram === input;
+    // check if input is in pangrams list
+    let pangram = pangrams.find((word) => word === input);
+
+    return pangram !== undefined;
   };
 
   const handleNotification = (message: string, type: string) => {

@@ -49,7 +49,15 @@ export async function GET(request: Request) {
   // Calculate maxScore
   let maxScore = 0;
   for (const word of possibleWords) {
-    let wordScore = word.length >= 4 ? word.length : 0;
+    let wordScore = 0;
+    if (word.length < 4) {
+      wordScore = 0;
+    } else if (word.length == 4) {
+      wordScore = 1;
+    } else if (word.length > 4) {
+      wordScore = word.length;
+    }
+
     if (pangrams.includes(word)) {
       wordScore += 7;
     }
