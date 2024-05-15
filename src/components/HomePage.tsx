@@ -19,13 +19,13 @@ export default function HomePage() {
           style={{ fontSize: "20px", padding: "10px" }}
           onClick={() => handleLanguageChange("en")}
         >
-          English
+          🇬🇧 English
         </button>
         <button
           style={{ fontSize: "20px", padding: "10px" }}
           onClick={() => handleLanguageChange("tr")}
         >
-          Turkish
+          🇹🇷 Turkish
         </button>
       </div>
     </div>
