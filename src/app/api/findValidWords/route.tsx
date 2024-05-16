@@ -90,6 +90,9 @@ export async function GET() {
   gameDataDate = today;
 
   return new Response(JSON.stringify(gameData), {
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
   });
 }
