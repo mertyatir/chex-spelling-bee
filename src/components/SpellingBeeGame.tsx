@@ -88,9 +88,13 @@ const SpellingBeeGame: React.FC<SpellingBeeGameProps> = ({ language }) => {
       try {
         let response;
         if (language === "en") {
-          response = await fetch("/api/findValidWords");
+          response = await fetch("/api/findValidWords", {
+            headers: { "Cache-Control": "no-cache" },
+          });
         } else if (language === "tr") {
-          response = await fetch("/api/findValidWordsTr");
+          response = await fetch("/api/findValidWordsTr", {
+            headers: { "Cache-Control": "no-cache" },
+          });
         } else {
           console.error("Invalid language");
         }
